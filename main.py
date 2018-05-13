@@ -1,8 +1,10 @@
 import sqlite3
 
+conn = sqlite3.connect("lab.db")
+cur = conn.cursor()
+
 def create_db():
-    conn = sqlite3.connect("lab.db")
-    cur = conn.cursor()
+    global conn, cur
 
     table_create_sql = """create table if not exists todo (
             id integer primary key autoincrement,
@@ -32,10 +34,13 @@ def run_program():
 			print()
 
 def list_todo():
-    conn = sqlite3.connect("lab.db")
-    cur = conn.cursor()
+    global conn, cur
 
-    sql = "select * from todo where 1"
+    print("Choose what do view:")
+    column = input("(w: What, d: Due, f: Finished, a: All)?")
+    print()
+
+    sql = "select" + column + "from todo where 1"
     cur.execute(sql)
 
     rows = cur.fetchall()
@@ -51,8 +56,7 @@ def list_todo():
 
 
 def add_todo():
-    conn = sqlite3.connect("lab.db")
-    cur = conn.cursor()
+    global conn, cur
 
     todo = input("Todo? ")
     due = input("Due date? ")
