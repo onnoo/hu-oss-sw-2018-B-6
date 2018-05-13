@@ -36,22 +36,10 @@ def run_program():
             print()
 
 def list_todo():
-    global conn, cur
+    conn = sqlite3.connect("lab.db")
+    cur = conn.cursor()
 
-    print("Choose what do view:")
-    column = input("w: What, d: Due, f: Finished, a: All)? ")
-    print()
-
-    if column == 'w' :
-        column = "what"
-    elif column == 'd' :
-        column = "due"
-    elif column == 'f':
-        column = "finished"
-    elif column == 'a':
-        column = "what, due, finished"
-
-    sql = "select " + "id," + column + " from todo where 1"
+    sql = "select * from todo where 1"
     cur.execute(sql)
 
     rows = cur.fetchall()
@@ -62,7 +50,8 @@ def list_todo():
                 print(row[i], end = " ")
             else :
                 print(row[i])
-    print()
+
+    conn.close()
 
 
 def add_todo():
@@ -137,14 +126,20 @@ def search_todo():
 
     rows = cur.fetchall()
 
+    no_result_found = 1
+
     print()
     for row in rows:
         if search_word == row[search_column-1]:
             for i in range(0,len(row)) :
+                no_result_found = 0
                 if i != len(row) - 1 :
                     print(row[i], end = " ")
                 else :
                     print(row[i])
+    
+    if(no_result_found):
+        print("NOT FOUND")
     print()
 
 
@@ -153,6 +148,3 @@ def search_todo():
 if __name__ == "__main__":
     create_db()
     run_program()
-
-
-
